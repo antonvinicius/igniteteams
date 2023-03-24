@@ -2,9 +2,21 @@ import * as Styled from './styles'
 
 import Logo from '@assets/logo.png'
 
-export function Header() {
+type Props = {
+  showBackButton?: boolean
+}
+
+export function Header({ showBackButton = false }: Props) {
   return (
     <Styled.Container>
+      {
+        showBackButton &&
+        <Styled.BackButton>
+          <Styled.BackIcon />
+        </Styled.BackButton>
+      }
+
+
       <Styled.Logo source={Logo} />
     </Styled.Container>
   )
