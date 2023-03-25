@@ -1,3 +1,6 @@
+import { useState } from 'react'
+import { FlatList } from 'react-native'
+
 import * as Styled from './styles'
 
 import { Header } from '@components/Header'
@@ -5,8 +8,14 @@ import { Highlight } from '@components/Highlight'
 import { ButtonIcon } from '@components/ButtonIcon'
 import { Input } from '@components/Input'
 import { Filter } from '@components/Filter'
+import { PlayerCard } from '@components/PlayerCard'
+import { ListEmpty } from '@components/ListEmpty'
+import { Button } from '../../components/Button'
 
 export function Players() {
+  const [players, setPlayers] = useState<string[]>(['Vinícius', 'Biro', 'Paulo', 'Maria', 'João', 'Alexandre', 'Marcos', 'Ana', 'Bia'])
+  const [team, setTeam] = useState('Time A')
+
   return (
     <Styled.Container>
       <Header
@@ -29,8 +38,45 @@ export function Players() {
         />
       </Styled.Form>
 
-      <Filter
-        title='Time A'
+      <Styled.HeaderList>
+        <FlatList
+          data={['Time A', 'Time B']}
+          keyExtractor={item => item}
+          renderItem={info => (
+            <Filter
+              title={info.item}
+              isActive={info.item === team}
+              onPress={() => setTeam(info.item)}
+            />
+          )}
+          horizontal
+        />
+
+        <Styled.NumberOfPlayers>{players.length}</Styled.NumberOfPlayers>
+      </Styled.HeaderList>
+
+      <FlatList
+        data={players}
+        keyExtractor={item => item}
+        renderItem={info => (
+          <PlayerCard
+            onRemove={() => { }}
+            name={info.item}
+          />
+        )}
+        ListEmptyComponent={() => (
+          <ListEmpty
+            message="Não há pessoas neste time."
+          />
+        )}
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={[{ paddingBottom: 100 }, players.length === 0 && { flex: 1 }]}
+      />
+
+      <Button
+        title='Remover Turma'
+        type='SECONDARY'
+        style={{ marginTop: 10 }}
       />
     </Styled.Container>
   )
