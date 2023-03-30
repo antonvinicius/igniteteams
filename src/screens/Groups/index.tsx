@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { FlatList } from 'react-native'
+import { useNavigation } from '@react-navigation/native'
 
 import * as Styled from './styles'
 
@@ -40,7 +41,7 @@ export function Groups() {
         showsVerticalScrollIndicator={false}
       />
 
-      <Button 
+      <Button
         title='Criar nova turma'
       />
     </Styled.Container>
