@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { FlatList } from 'react-native'
+import { useRoute } from '@react-navigation/native'
 
 import * as Styled from './styles'
 
@@ -10,11 +11,17 @@ import { Input } from '@components/Input'
 import { Filter } from '@components/Filter'
 import { PlayerCard } from '@components/PlayerCard'
 import { ListEmpty } from '@components/ListEmpty'
-import { Button } from '../../components/Button'
+import { Button } from '@components/Button'
+
+type RouteParams = {
+  group: string
+}
 
 export function Players() {
   const [players, setPlayers] = useState<string[]>(['Vinícius', 'Biro', 'Paulo', 'Maria', 'João', 'Alexandre', 'Marcos', 'Ana', 'Bia'])
   const [team, setTeam] = useState('Time A')
+
+  const { group } = useRoute().params as RouteParams
 
   return (
     <Styled.Container>
@@ -23,7 +30,7 @@ export function Players() {
       />
 
       <Highlight
-        title='Nome da turma'
+        title={group}
         subtitle='Adicione a galera e separe os times'
       />
 
