@@ -7,7 +7,7 @@ type Props = {
   onRemove: () => void
 }
 
-export function PlayerCard({ name }: Props) {
+export function PlayerCard({ name, onRemove }: Props) {
   return (
     <Styled.Container>
       <Styled.Icon
@@ -21,6 +21,7 @@ export function PlayerCard({ name }: Props) {
       <ButtonIcon
         icon="close"
         type="SECONDARY"
+        onPress={onRemove}
       />
     </Styled.Container>
   )

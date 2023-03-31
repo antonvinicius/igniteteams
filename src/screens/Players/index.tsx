@@ -9,6 +9,7 @@ import { AppError } from '@utils/AppError'
 import { playerAddByGroup } from '@storage/player/playerAddByGroup'
 import { playersGetByGroupAndTeam } from '@storage/player/playerGetByGroupAndTeam'
 import { PlayerStorageDTO } from '@storage/player/playerStorageDTO'
+import { playerRemoveByGroup } from '@storage/player/playerRemoveByGroup'
 
 import { Header } from '@components/Header'
 import { Highlight } from '@components/Highlight'
@@ -72,6 +73,16 @@ export function Players() {
     fetchPlayersByTeam()
   }, [team])
 
+  async function handleRemovePlayer(item: PlayerStorageDTO) {
+    try {
+      await playerRemoveByGroup(item.name, group)
+      fetchPlayersByTeam()
+    } catch (error) {
+      console.log(error)
+      Alert.alert('Remover Pessoa', 'Não foi possível remover essa pessoa.')
+    }
+  }
+
   return (
     <Styled.Container>
       <Header
@@ -122,7 +133,7 @@ export function Players() {
         keyExtractor={item => item.name}
         renderItem={({ item }) => (
           <PlayerCard
-            onRemove={() => { }}
+            onRemove={() => handleRemovePlayer(item)}
             name={item.name}
           />
         )}
