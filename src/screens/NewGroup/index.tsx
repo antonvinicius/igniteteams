@@ -50,6 +50,8 @@ export function NewGroup() {
           value={group}
           onChangeText={setGroup}
           placeholder='Nome da turma'
+          onSubmitEditing={handleNew}
+          returnKeyType={'done'}
         />
 
         <Button
