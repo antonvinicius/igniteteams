@@ -1,8 +1,10 @@
 import { useState } from 'react'
-import { FlatList } from 'react-native'
+import { FlatList, Alert } from 'react-native'
 import { useRoute } from '@react-navigation/native'
 
 import * as Styled from './styles'
+
+import { AppError } from '@utils/AppError'
 
 import { Header } from '@components/Header'
 import { Highlight } from '@components/Highlight'
@@ -13,15 +15,44 @@ import { PlayerCard } from '@components/PlayerCard'
 import { ListEmpty } from '@components/ListEmpty'
 import { Button } from '@components/Button'
 
+import { playerAddByGroup } from '@storage/player/playerAddByGroup'
+import { playersGetByGroup } from '@storage/player/playerGetByGroup'
+
 type RouteParams = {
   group: string
 }
 
 export function Players() {
-  const [players, setPlayers] = useState<string[]>(['Vinícius', 'Biro', 'Paulo', 'Maria', 'João', 'Alexandre', 'Marcos', 'Ana', 'Bia'])
+  const [newPlayerName, setNewPlayerName] = useState('')
+  const [players, setPlayers] = useState<string[]>([])
   const [team, setTeam] = useState('Time A')
 
   const { group } = useRoute().params as RouteParams
+
+  async function handleAddPlayer() {
+    if (newPlayerName.trim().length === 0) {
+      return Alert.alert('Nova Pessoa', 'Informe o nome da pessoa para adicionar.')
+    }
+
+    const newPlayer = {
+      name: newPlayerName,
+      team
+    }
+
+    try {
+      await playerAddByGroup(newPlayer, group)
+      const players = await playersGetByGroup(group)
+      console.log(players)
+
+    } catch (error) {
+      if (error instanceof AppError) {
+        Alert.alert('Nova Pessoa', error.message)
+      } else {
+        console.error(error)
+        Alert.alert('Nova Pessoa', 'Não foi possível inserir esta pessoa no time.')
+      }
+    }
+  }
 
   return (
     <Styled.Container>
@@ -36,12 +67,15 @@ export function Players() {
 
       <Styled.Form>
         <Input
+          value={newPlayerName}
+          onChangeText={setNewPlayerName}
           placeholder='Nome da pessoa'
           autoCorrect={false}
         />
 
         <ButtonIcon
           icon='add'
+          onPress={handleAddPlayer}
         />
       </Styled.Form>
 
